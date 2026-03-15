@@ -1,0 +1,35 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+
+# Go build artifacts
+*.test
+*.out
+/dist/
+
+# Go workspace
+go.work
+go.work.sum
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+# Vim
+*.swp
+*.swo
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+
+# Zed
+.zed/
+.project-*/
+CLA*
