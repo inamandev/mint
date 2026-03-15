@@ -1,0 +1,32 @@
+{
+  "name": "mint",
+  "image": "mcr.microsoft.com/devcontainers/go",
+  "containerEnv": {
+    "ZSH_THEME": "wezm+"
+  },
+  "appPort": ["2222:2222"],
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "configureZshAsDefaultShell": true
+    },
+    "ghcr.io/devcontainers/features/go:1": {},
+    "ghcr.io/devcontainers/features/sshd:1": {},
+    "./local-features/go-air": {},
+    "./local-features/vim": {}
+  },
+  "customizations": {
+    "zed": {
+      "settings": {
+        "terminal": {
+          "shell": "zsh"
+        }
+      }
+    },
+    "vscode": {
+      "extensions": [
+        "golang.go"
+      ]
+    }
+  },
+  "postCreateCommand": "go mod tidy"
+}

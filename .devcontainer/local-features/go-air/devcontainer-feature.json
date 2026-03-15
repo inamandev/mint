@@ -1,0 +1,7 @@
+{
+  "id": "go-air-latest",
+  "name": "Golang air latest",
+  "version": "1.0.0",
+  "description": "Installs air for hot reload of Go applications",
+  "installAfter": ["ghcr.io/devcontainers/features/go:1"]
+}
