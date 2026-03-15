@@ -28,5 +28,5 @@
       ]
     }
   },
-  "postCreateCommand": "go mod tidy"
+  "postCreateCommand": "go mod tidy && go install ."
 }
