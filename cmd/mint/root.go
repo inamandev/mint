@@ -7,9 +7,10 @@ import (
 
 	"github.com/inamandev/mint/internal/prompt"
 	tmpl "github.com/inamandev/mint/internal/template"
+	"github.com/inamandev/mint/internal/userconfig"
 )
 
-const version = "0.0.2"
+const version = "0.0.3"
 
 const usage = `
 mint — a project scaffolder
@@ -52,6 +53,19 @@ func Run(c Config) {
 }
 
 func runCreate(templateFS fs.FS, args []string) {
+	cfg, err := userconfig.Load()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "warning: could not load config: %s\n", err)
+	}
+
+	// first run — prompt for github username and save
+	if cfg.GitHub.Username == "" {
+		cfg.GitHub.Username = prompt.Ask("GitHub username:")
+		if err := userconfig.Save(cfg); err != nil {
+			fmt.Fprintf(os.Stderr, "warning: could not save config: %s\n", err)
+		}
+	}
+
 	slug := ""
 	if len(args) > 0 {
 		slug = args[0]
@@ -59,12 +73,11 @@ func runCreate(templateFS fs.FS, args []string) {
 		slug = prompt.Ask("Project slug (used for dir, repo, module):")
 	}
 
-	name := prompt.Ask("Project display name:")
-	dirName := prompt.Ask("Directory name (default: " + slug + "):")
-	if dirName == "" {
-		dirName = slug
-	}
-	module := prompt.Ask("Module path (e.g. github.com/you/" + slug + "):")
+	name := prompt.AskDefault("Project display name:", slug)
+	dirName := prompt.AskDefault("Directory name:", slug)
+
+	defaultModule := fmt.Sprintf("github.com/%s/%s", cfg.GitHub.Username, slug)
+	module := prompt.AskDefault("Module path:", defaultModule)
 
 	projectType := prompt.Select("Project type:", []string{
 		"go-api",
@@ -74,23 +87,29 @@ func runCreate(templateFS fs.FS, args []string) {
 		"go-script",
 	})
 
+	defaultArch := cfg.Defaults.Arch
+	if defaultArch == "" {
+		defaultArch = "ddd"
+	}
 	arch := "flat"
 	if projectType == "go-api" || projectType == "go-grpc" {
-		arch = prompt.Select("Architecture:", []string{"ddd", "flat", "standard"})
+		arch = prompt.SelectDefault("Architecture:", []string{"ddd", "flat", "standard"}, defaultArch)
 	}
 
-	di := "none"
-	if prompt.Confirm("Include dependency injection?") {
-		di = prompt.Select("DI framework:", []string{"fx", "wire", "dig", "none"})
+	defaultDI := cfg.Defaults.DI
+	if defaultDI == "" {
+		defaultDI = "none"
 	}
+	di := prompt.SelectDefault("DI framework:", []string{"fx", "wire", "dig", "none"}, defaultDI)
 
+	df := cfg.Defaults.Features
 	features := tmpl.Features{
-		Makefile:     prompt.Confirm("Include Makefile?"),
-		DevContainer: prompt.Confirm("Include DevContainer?"),
-		CI:           prompt.Confirm("Include GitHub Actions CI?"),
-		Dockerfile:   prompt.Confirm("Include Dockerfile?"),
-		Linter:       prompt.Confirm("Include golangci-lint?"),
-		Air:          prompt.Confirm("Include air (hot reload)?"),
+		Makefile:     prompt.ConfirmDefault("Include Makefile?", df.Makefile),
+		DevContainer: prompt.ConfirmDefault("Include DevContainer?", df.DevContainer),
+		CI:           prompt.ConfirmDefault("Include GitHub Actions CI?", df.CI),
+		Dockerfile:   prompt.ConfirmDefault("Include Dockerfile?", df.Dockerfile),
+		Linter:       prompt.ConfirmDefault("Include golangci-lint?", df.Linter),
+		Air:          prompt.ConfirmDefault("Include air (hot reload)?", df.Air),
 	}
 
 	schemaName := projectType + "-" + arch

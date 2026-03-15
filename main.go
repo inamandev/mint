@@ -9,7 +9,7 @@ import (
 // FS holds all embedded template files.
 // Templates are bundled into the binary at compile time.
 //
-//go:embed templates
+//go:embed all:templates
 var TemplateFS embed.FS
 
 func main() {

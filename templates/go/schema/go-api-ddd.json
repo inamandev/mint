@@ -1,0 +1,37 @@
+{
+  "name": "Go REST API — DDD",
+  "description": "Domain-driven REST API with one sample user domain and optional DI",
+  "required": {
+    "cmd/server/main.go": "main.go.tmpl",
+    "internal/user/handler.go": "handler.go.tmpl",
+    "internal/user/service.go": "service.go.tmpl",
+    "internal/user/store.go": "store.go.tmpl",
+    "internal/user/domain.go": "domain.go.tmpl",
+    "pkg/logger/logger.go": "logger.go.tmpl",
+    "go.mod": "go.mod.tmpl",
+    ".gitignore": ".gitignore.tmpl"
+  },
+  "optional": {
+    "makefile": {
+      "Makefile": "Makefile.tmpl"
+    },
+    "dockerfile": {
+      "Dockerfile": "Dockerfile.tmpl"
+    },
+    "devcontainer": {
+      ".devcontainer/devcontainer.json": "devcontainer.json.tmpl"
+    },
+    "ci": {
+      ".github/workflows/ci.yml": "ci.yml.tmpl"
+    },
+    "linter": {
+      ".golangci.yml": ".golangci.yml.tmpl"
+    },
+    "air": {
+      ".air.toml": "air.toml.tmpl"
+    },
+    "config": {
+      "internal/config/config.go": "config.go.tmpl"
+    }
+  }
+}

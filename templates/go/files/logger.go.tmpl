@@ -1,0 +1,26 @@
+package logger
+
+import (
+	"log"
+	"os"
+)
+
+type Logger struct {
+	info *log.Logger
+	err  *log.Logger
+}
+
+func New() *Logger {
+	return &Logger{
+		info: log.New(os.Stdout, "[INFO] ", log.LstdFlags),
+		err:  log.New(os.Stderr, "[ERROR] ", log.LstdFlags),
+	}
+}
+
+func (l *Logger) Info(msg string) {
+	l.info.Println(msg)
+}
+
+func (l *Logger) Error(msg string) {
+	l.err.Println(msg)
+}

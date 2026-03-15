@@ -27,4 +27,5 @@ type Features struct {
 	Dockerfile   bool
 	Linter       bool
 	Air          bool
+	Config       bool
 }

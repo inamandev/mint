@@ -1,0 +1,37 @@
+package user
+
+import (
+	"encoding/json"
+	"net/http"
+)
+
+type Handler struct {
+	service *Service
+}
+
+func NewHandler(s *Service) *Handler {
+	return &Handler{service: s}
+}
+
+func (h *Handler) Register(mux *http.ServeMux) {
+	mux.HandleFunc("GET /users", h.List)
+	mux.HandleFunc("POST /users", h.Create)
+}
+
+func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
+	users := h.service.List()
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(users)
+}
+
+func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
+	var u User
+	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	created := h.service.Create(u.Name, u.Email)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(created)
+}

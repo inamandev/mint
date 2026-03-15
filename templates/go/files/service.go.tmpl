@@ -1,0 +1,25 @@
+package user
+
+import "fmt"
+
+type Service struct {
+	store *Store
+}
+
+func NewService(s *Store) *Service {
+	return &Service{store: s}
+}
+
+func (s *Service) List() []User {
+	return s.store.All()
+}
+
+func (s *Service) Create(name, email string) User {
+	u := User{
+		ID:    fmt.Sprintf("%d", len(s.store.All())+1),
+		Name:  name,
+		Email: email,
+	}
+	s.store.Save(u)
+	return u
+}

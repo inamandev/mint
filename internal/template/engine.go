@@ -20,13 +20,13 @@ type Schema struct {
 // Render reads a schema file, renders required files always,
 // and optional files based on user feature selections.
 func Render(opts RenderOptions) error {
-	schemaPath := filepath.Join(opts.Language, "schema", opts.SchemaName+".json")
+	schemaPath := filepath.Join("templates", opts.Language, "schema", opts.SchemaName+".json")
 	schema, err := loadSchema(opts.FS, schemaPath)
 	if err != nil {
 		return err
 	}
 
-	filesDir := filepath.Join(opts.Language, "files")
+	filesDir := filepath.Join("templates", opts.Language, "files")
 
 	// render required files
 	for outPath, tmplFile := range schema.Required {
@@ -82,6 +82,8 @@ func featureEnabled(feature string, f Features) bool {
 		return f.Linter
 	case "air":
 		return f.Air
+	case "config":
+		return f.Config
 	}
 	return false
 }

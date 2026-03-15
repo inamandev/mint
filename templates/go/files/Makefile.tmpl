@@ -1,0 +1,21 @@
+.PHONY: build run test lint tidy clean
+
+APP_NAME := {{ .Slug }}
+
+build:
+	go build -o bin/$(APP_NAME) ./cmd/server
+
+run:
+	go run ./cmd/server
+
+test:
+	go test ./...
+
+lint:
+	golangci-lint run ./...
+
+tidy:
+	go mod tidy
+
+clean:
+	rm -rf bin/

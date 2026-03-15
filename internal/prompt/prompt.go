@@ -7,23 +7,54 @@ import (
 	"strings"
 )
 
+var reader = bufio.NewReader(os.Stdin)
+
+func readLine() string {
+	line, _ := reader.ReadString('\n')
+	return strings.TrimSpace(line)
+}
+
 func Ask(question string) string {
 	fmt.Print(question + " ")
-	reader := bufio.NewReader(os.Stdin)
-	answer, _ := reader.ReadString('\n')
-	return strings.TrimSpace(answer)
+	return readLine()
+}
+
+func AskDefault(question, defaultVal string) string {
+	fmt.Printf("%s [%s] ", question, defaultVal)
+	input := readLine()
+	if input == "" {
+		return defaultVal
+	}
+	return input
 }
 
 func Select(question string, options []string) string {
-	fmt.Println(question)
-	for i, opt := range options {
-		fmt.Printf("  %d) %s\n", i+1, opt)
-	}
-	fmt.Print("Enter choice: ")
+	return SelectDefault(question, options, "")
+}
 
-	reader := bufio.NewReader(os.Stdin)
-	input, _ := reader.ReadString('\n')
-	input = strings.TrimSpace(input)
+func SelectDefault(question string, options []string, defaultVal string) string {
+	fmt.Println(question)
+	defaultIdx := -1
+	for i, opt := range options {
+		marker := "  "
+		if opt == defaultVal {
+			marker = "* "
+			defaultIdx = i
+		}
+		fmt.Printf("%s%d) %s\n", marker, i+1, opt)
+	}
+
+	if defaultIdx >= 0 {
+		fmt.Printf("Enter choice [%d]: ", defaultIdx+1)
+	} else {
+		fmt.Print("Enter choice: ")
+	}
+
+	input := readLine()
+
+	if input == "" && defaultIdx >= 0 {
+		return defaultVal
+	}
 
 	for i, opt := range options {
 		if input == fmt.Sprintf("%d", i+1) {
@@ -32,10 +63,22 @@ func Select(question string, options []string) string {
 	}
 
 	fmt.Println("invalid choice, please try again")
-	return Select(question, options)
+	return SelectDefault(question, options, defaultVal)
 }
 
 func Confirm(question string) bool {
-	answer := Ask(question + " (y/n):")
-	return strings.ToLower(answer) == "y"
+	return ConfirmDefault(question, false)
+}
+
+func ConfirmDefault(question string, defaultVal bool) bool {
+	hint := "y/N"
+	if defaultVal {
+		hint = "Y/n"
+	}
+	fmt.Printf("%s (%s): ", question, hint)
+	input := strings.ToLower(readLine())
+	if input == "" {
+		return defaultVal
+	}
+	return input == "y"
 }

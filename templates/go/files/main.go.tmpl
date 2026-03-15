@@ -1,0 +1,25 @@
+package main
+
+import (
+	"log"
+	"net/http"
+
+	"{{ .Module }}/internal/user"
+	"{{ .Module }}/pkg/logger"
+)
+
+func main() {
+	l := logger.New()
+
+	mux := http.NewServeMux()
+
+	userStore := user.NewStore()
+	userService := user.NewService(userStore)
+	userHandler := user.NewHandler(userService)
+	userHandler.Register(mux)
+
+	l.Info("starting {{ .Slug }} on :8080")
+	if err := http.ListenAndServe(":8080", mux); err != nil {
+		log.Fatal(err)
+	}
+}

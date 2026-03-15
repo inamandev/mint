@@ -1,0 +1,17 @@
+package user
+
+type Store struct {
+	users []User
+}
+
+func NewStore() *Store {
+	return &Store{}
+}
+
+func (s *Store) All() []User {
+	return s.users
+}
+
+func (s *Store) Save(u User) {
+	s.users = append(s.users, u)
+}

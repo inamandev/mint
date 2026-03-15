@@ -1,0 +1,17 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  bin = "./tmp/{{ .Slug }}"
+  cmd = "go build -o ./tmp/{{ .Slug }} ./cmd/server"
+  delay = 1000
+  exclude_dir = ["tmp", "vendor", "bin"]
+  exclude_regex = ["_test.go"]
+  include_ext = ["go", "tmpl", "html"]
+  kill_delay = "0s"
+
+[log]
+  time = false
+
+[misc]
+  clean_on_exit = true
