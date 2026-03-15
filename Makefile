@@ -23,3 +23,6 @@ tidy:
 
 clean:
 	rm -rf bin/
+
+test-create:
+	go run . create testapp
