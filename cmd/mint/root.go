@@ -11,13 +11,13 @@ const usage = `
 mint — a project scaffolder
 
 Usage:
-  mint new <project-name>   scaffold a new project
+  mint create <project-name>   scaffold a new project
   mint list                 list available templates
   mint version              print mint version
 
 Examples:
-  mint new myapp
-  mint new myapp --type api --arch ddd
+  mint create myapp
+  mint create myapp --type api --arch ddd
 `
 
 func Run() {
@@ -29,8 +29,8 @@ func Run() {
 	}
 
 	switch args[0] {
-	case "new":
-		runNew(args[1:])
+	case "create":
+		runCreate(args[1:])
 	case "list":
 		runList()
 	case "version", "--version", "-v":
@@ -44,7 +44,7 @@ func Run() {
 	}
 }
 
-func runNew(args []string) {
+func runCreate(args []string) {
 	if len(args) == 0 {
 		fmt.Fprintln(os.Stderr, "error: project name required\n\nUsage: mint new <project-name>")
 		os.Exit(1)
